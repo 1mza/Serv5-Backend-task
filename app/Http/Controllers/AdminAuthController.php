@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
-use App\Notifications\OTP;
+use App\Mail\OTP;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -74,7 +75,7 @@ class AdminAuthController extends Controller
         }
         $otp = rand(1000, 9999);
         $admin->update(['otp' => $otp]);
-        $admin->notify(new OTP($admin));
+        dispatch(Mail::to($admin)->send(new OTP($admin)))->afterResponse();
         return redirect()->route('admin.viewPageCheckOtp')->with('admin_id', $admin->id);
     }
 

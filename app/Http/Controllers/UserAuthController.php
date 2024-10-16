@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Mail\OTP;
 use App\Models\User;
-use App\Notifications\OTP;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -72,7 +73,7 @@ class UserAuthController extends Controller
         }
         $otp = rand(1000, 9999);
         $user->update(['otp' => $otp]);
-        $user->notify(new OTP($user));
+        dispatch(Mail::to($user)->send(new OTP($user)))->afterResponse();
 //        dd('OTP IS SENT');
         return redirect()->route('user.viewPageCheckOtp')->with('user_id', $user->id);
     }
