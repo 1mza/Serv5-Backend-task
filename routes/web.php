@@ -15,7 +15,7 @@ Route::middleware(RedirectIfAuthenticated::class)->group(function () {
     Route::post('/login', [UserAuthController::class, 'storeSession'])->name('user.storeSession');
 
     Route::get('/login-otp-page', [UserAuthController::class, 'viewPageEmailToSendOtp'])->name('user.viewPageEmailToSendOtp');
-    Route::post('/checkEmail', [UserAuthController::class, 'checkEmailAndSentOTP'])->name('user.checkEmailAndSentOTP');
+    Route::post('/checkEmail', [UserAuthController::class, 'checkEmailAndSentOTP'])->name('user.checkEmailAndSentOTP')->middleware(['throttle:login-with-otp']);
     Route::get('/login-with-otp', [UserAuthController::class, 'viewPageCheckOtp'])->name('user.viewPageCheckOtp');
     Route::post('/login-with-otp', [UserAuthController::class, 'loginWithOTP'])->name('user.loginOTP');
 
@@ -45,7 +45,7 @@ Route::prefix('dashboard')->group(function () {
         Route::post('/login', [AdminAuthController::class, 'storeSession'])->name('admin.storeSession');
 
         Route::get('/login-otp-page', [AdminAuthController::class, 'viewPageEmailToSendOtp'])->name('admin.viewPageEmailToSendOtp');
-        Route::post('/checkEmail', [AdminAuthController::class, 'checkEmailAndSentOTP'])->name('admin.checkEmailAndSentOTP');
+        Route::post('/checkEmail', [AdminAuthController::class, 'checkEmailAndSentOTP'])->name('admin.checkEmailAndSentOTP')->middleware('throttle:login-with-otp');
         Route::get('/login-with-otp', [AdminAuthController::class, 'viewPageCheckOtp'])->name('admin.viewPageCheckOtp');
         Route::post('/login-with-otp', [AdminAuthController::class, 'loginWithOTP'])->name('admin.loginOTP');
 
